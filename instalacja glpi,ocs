@@ -39,14 +39,15 @@ sudo mv ocsinventoryng /var/www/html/glpi/plugins
 sudo a2enconf ocsinventory-reports
 sudo a2enconf z-ocsinventory-server.conf
 sudo sed -i "172s/.*/AllowOverride All/" /etc/apache2/apache2.conf
-sudo systemctl reload apache2s
-#Usuwanie zbednych plikow
-#sudo rm glpi-ocsinventoryng-1.6.0.tar.gz
-#sudo rm OCSNG_UNIX_SERVER_2.6.tar.gz
-#sudo rm glpi-9.4.2.tgz
-
+sudo sed -i "s/PerlSetEnv OCS_DB_NAME ocsweb/PerlSetEnv OCS_DB_NAME ocs/" /etc/apache2/conf-available/z-ocsinventory-server.conf
+sudo sed -i "s/PerlSetEnv OCS_DB_LOCAL ocsweb/PerlSetEnv OCS_DB_LOCAL ocs/" /etc/apache2/conf-available/z-ocsinventory-server.conf
+sudo sed -i "s/PerlSetVar OCS_DB_PWD ocs/PerlSetVar OCS_DB_PWD TjBmH! /" /etc/apache2/conf-available/z-ocsinventory-server.conf
+sudo systemctl reload apache2
+Usuwanie zbednych plikow
+sudo rm OCSNG_UNIX_SERVER_2.6.tar.gz
+sudo rm -R OCSNG_UNIX_SERVER_2.6
 #Baza danych
-mysql -u root << eof
+sudo mysql -u root << eof
 CREATE DATABASE glpi;
 CREATE USER 'glpidb'@'localhost' IDENTIFIED BY 'TjBmH!';
 GRANT ALL PRIVILEGES ON glpi.* TO 'glpidb'@'localhost';
