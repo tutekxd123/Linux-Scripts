@@ -45,7 +45,7 @@ sudo sed -i "s/PerlSetEnv OCS_DB_NAME ocsweb/PerlSetEnv OCS_DB_NAME ocs/" /etc/a
 sudo sed -i "s/PerlSetEnv OCS_DB_LOCAL ocsweb/PerlSetEnv OCS_DB_LOCAL ocs/" /etc/apache2/conf-available/z-ocsinventory-server.conf
 sudo sed -i "s/PerlSetVar OCS_DB_PWD ocs/PerlSetVar OCS_DB_PWD TjBmH! /" /etc/apache2/conf-available/z-ocsinventory-server.conf
 sudo systemctl reload apache2
-Usuwanie zbednych plikow
+#Usuwanie zbednych plikow
 sudo rm ~/OCSNG_UNIX_SERVER_2.6.tar.gz
 sudo rm -R ~/OCSNG_UNIX_SERVER_2.6
 #Baza danych
