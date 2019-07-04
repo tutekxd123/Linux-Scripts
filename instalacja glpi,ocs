@@ -3,8 +3,9 @@ cd ~
 #Instalacja Pakietow
 sudo apt-get update
 sudo apt-get -y upgrade
+sudo apt-get -y install php-soap
 sudo apt-get -y install mariadb-server make cmake gcc 
-sudo apt-get -y install mysql-server mysql-client php7.0-mysql php-soap
+sudo apt-get -y install mysql-server mysql-client php7.0-mysql
 sudo apt-get -y install php php-{curl,gd,imagick,intl,apcu,recode,memcache,imap,mysql,cas,ldap,tidy,pear,xmlrpc,pspell,gettext,mbstring,json,iconv,xml,gd,xsl}
 sudo apt-get -y install apache2 libapache2-mod-php apache2-dev 
 sudo apt install -y php7.2 php7.2-fpm php7.2-common
@@ -21,7 +22,7 @@ sudo cpan install Apache2::SOAP
 sudo apt-get install php-{bcmath,bz2,intl,gd,mbstring,mysql,zip,fpm} -y
 sudo a2enconf php7.2-fpm
 sudo a2enmod proxy_fcgi setenvif
-#instalaca ocsinventory
+#instalacja ocsinventory
 wget https://github.com/OCSInventory-NG/OCSInventory-ocsreports/releases/download/2.6/OCSNG_UNIX_SERVER_2.6.tar.gz
 tar -xf OCSNG_UNIX_SERVER_2.6.tar.gz 
 cd OCSNG_UNIX_SERVER_2.6
@@ -36,6 +37,7 @@ wget https://github.com/pluginsGLPI/ocsinventoryng/releases/download/1.6.0/glpi-
 tar -xf glpi-ocsinventoryng-1.6.0.tar.gz
 sudo mv ocsinventoryng /var/www/html/glpi/plugins
 #Wstepna Konfiguracja ocsinventory
+sudo chown -R www-data:www-data /var/lib/ocsinventory-reports
 sudo a2enconf ocsinventory-reports
 sudo a2enconf z-ocsinventory-server.conf
 sudo sed -i "172s/.*/AllowOverride All/" /etc/apache2/apache2.conf
@@ -44,8 +46,8 @@ sudo sed -i "s/PerlSetEnv OCS_DB_LOCAL ocsweb/PerlSetEnv OCS_DB_LOCAL ocs/" /etc
 sudo sed -i "s/PerlSetVar OCS_DB_PWD ocs/PerlSetVar OCS_DB_PWD TjBmH! /" /etc/apache2/conf-available/z-ocsinventory-server.conf
 sudo systemctl reload apache2
 Usuwanie zbednych plikow
-sudo rm OCSNG_UNIX_SERVER_2.6.tar.gz
-sudo rm -R OCSNG_UNIX_SERVER_2.6
+sudo rm ~/OCSNG_UNIX_SERVER_2.6.tar.gz
+sudo rm -R ~/OCSNG_UNIX_SERVER_2.6
 #Baza danych
 sudo mysql -u root << eof
 CREATE DATABASE glpi;
@@ -55,5 +57,4 @@ CREATE DATABASE ocs;
 CREATE USER 'ocs'@'localhost' IDENTIFIED BY 'TjBmH!';
 GRANT ALL PRIVILEGES ON ocs.* TO 'ocs'@'localhost';
 FLUSH PRIVILEGES;
-exit;
 eof
