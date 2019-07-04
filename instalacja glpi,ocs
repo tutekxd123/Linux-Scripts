@@ -1,0 +1,58 @@
+#!/bin/bash
+cd ~
+#Instalacja Pakietow
+sudo apt-get update
+sudo apt-get -y upgrade
+sudo apt-get -y install mariadb-server make cmake gcc 
+sudo apt-get -y install mysql-server mysql-client php7.0-mysql php-soap
+sudo apt-get -y install php php-{curl,gd,imagick,intl,apcu,recode,memcache,imap,mysql,cas,ldap,tidy,pear,xmlrpc,pspell,gettext,mbstring,json,iconv,xml,gd,xsl}
+sudo apt-get -y install apache2 libapache2-mod-php apache2-dev 
+sudo apt install -y php7.2 php7.2-fpm php7.2-common
+sudo apt-get -y install libapache2-mod-perl2
+sudo perl -MCPAN -e 'install Apache2::SOAP'
+sudo perl -MCPAN -e 'install XML::Entities'
+sudo perl -MCPAN -e 'install Net::IP'
+sudo perl -MCPAN -e 'install Apache::DBI'
+sudo perl -MCPAN -e 'install Mojolicious::Lite'
+sudo perl -MCPAN -e 'install Switch'
+sudo perl -MCPAN -e 'install Plack::Handler'
+sudo perl -MCPAN -e 'install XML::Simple'
+sudo cpan install Apache2::SOAP
+sudo apt-get install php-{bcmath,bz2,intl,gd,mbstring,mysql,zip,fpm} -y
+sudo a2enconf php7.2-fpm
+sudo a2enmod proxy_fcgi setenvif
+#instalaca ocsinventory
+wget https://github.com/OCSInventory-NG/OCSInventory-ocsreports/releases/download/2.6/OCSNG_UNIX_SERVER_2.6.tar.gz
+tar -xf OCSNG_UNIX_SERVER_2.6.tar.gz 
+cd OCSNG_UNIX_SERVER_2.6
+sudo sh setup.sh
+#Instalacja Glpi
+wget https://github.com/glpi-project/glpi/releases/download/9.4.2/glpi-9.4.2.tgz
+tar -xf glpi-9.4.2.tgz
+sudo mv glpi /var/www/html
+sudo chown -R www-data:www-data /var/www/html/glpi
+#Instalacja pluginu
+wget https://github.com/pluginsGLPI/ocsinventoryng/releases/download/1.6.0/glpi-ocsinventoryng-1.6.0.tar.gz
+tar -xf glpi-ocsinventoryng-1.6.0.tar.gz
+sudo mv ocsinventoryng /var/www/html/glpi/plugins
+#Wstepna Konfiguracja ocsinventory
+sudo a2enconf ocsinventory-reports
+sudo a2enconf z-ocsinventory-server.conf
+sudo sed -i "172s/.*/AllowOverride All/" /etc/apache2/apache2.conf
+sudo systemctl reload apache2s
+#Usuwanie zbednych plikow
+#sudo rm glpi-ocsinventoryng-1.6.0.tar.gz
+#sudo rm OCSNG_UNIX_SERVER_2.6.tar.gz
+#sudo rm glpi-9.4.2.tgz
+
+#Baza danych
+mysql -u root << eof
+CREATE DATABASE glpi;
+CREATE USER 'glpidb'@'localhost' IDENTIFIED BY 'TjBmH!';
+GRANT ALL PRIVILEGES ON glpi.* TO 'glpidb'@'localhost';
+CREATE DATABASE ocs;
+CREATE USER 'ocs'@'localhost' IDENTIFIED BY 'TjBmH!';
+GRANT ALL PRIVILEGES ON ocs.* TO 'ocs'@'localhost';
+FLUSH PRIVILEGES;
+exit;
+eof
